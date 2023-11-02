@@ -30,15 +30,7 @@ function Header() {
                             className="user-img"
                         />
                         {
-                            <ul className="dropdown-menu text-small" aria-labelledby="dropdownUser1" style={{}}>
-
-                                <>
-                                    <li><Link className="dropdown-item" to={`/home/customer`}>Thông tin</Link></li>
-                                    <li><Link className="dropdown-item" to={`/home/orders`}>Lịch sử mua hàng</Link></li>
-                                    <li><p className="dropdown-item">Đăng xuất</p></li>
-                                </>
-                                <li><Link to={`/home/login`} className="dropdown-item" >Đăng nhập</Link></li>
-                            </ul>
+                           <span className="user-info">Đăng nhập</span>
 
                         }
 
