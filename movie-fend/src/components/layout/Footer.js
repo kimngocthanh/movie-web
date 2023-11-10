@@ -2,10 +2,10 @@ function Footer() {
     return (
         <>
             <footer className="text-center text-lg-start bg-light text-muted">
-                <section className="d-flex justify-content-center justify-content-lg-between p-4 border-bottom">
+                {/* <section className="d-flex justify-content-center justify-content-lg-between p-4 border-bottom">
 
-                </section>
-                <section className>
+                </section> */}
+                <section style={{backgroundColor: "#2d2e37" }}>
                     <div className="container text-center text-md-start mt-5">
                         <div className="row mt-3">
                             <div className="col-md-3 col-lg-4 col-xl-3 mx-auto mb-4">
@@ -57,7 +57,7 @@ function Footer() {
                         </div>
                     </div>
                 </section>
-                <div className="text-center p-4" style={{ backgroundColor: 'rgba(0, 0, 0, 0.05)' }}>
+                <div className="text-center p-4" style={{ backgroundColor: '#1e1e2a' }}>
                     <p className="text-reset fw-bold" >KNT-Movie: Xem phim mới chất lượng cao</p>
                 </div>
             </footer>

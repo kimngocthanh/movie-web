@@ -1,4 +1,4 @@
-package com.example.kntshop.account_users.config;
+package com.example.movieapi.account_users.config;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;

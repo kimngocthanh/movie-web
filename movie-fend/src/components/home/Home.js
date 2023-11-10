@@ -1,7 +1,37 @@
+import { useEffect, useState } from "react";
 import Footer from "../layout/Footer";
 import Header from "../layout/Header";
-import './Home.css'
+import './Home.css';
+import {BiLeftArrow, BiRightArrow} from "react-icons/bi"
+import axios from "axios";
+import { Link } from "react-router-dom";
+
 function Home() {
+    const [page, setPage] = useState(0);
+    const [totalPage, setTotalPage] = useState(0);
+    const [movies, setMovies] = useState([]);
+
+    const getAllMovie = async () => {
+        const res = await axios.get(`http://localhost:8080/movie?page=${page}`)
+        setTotalPage(res.data.totalPages);
+        setMovies(res.data.content);
+    }
+
+    const nextPage = () => {
+        if (page + 1 < totalPage) {
+            setPage((prev) => prev + 1)
+        }
+    }
+
+    const prevPage = () => {
+        if (page > 0) {
+            setPage((prev) => prev - 1)
+        }
+    }
+
+    useEffect(() => {
+        getAllMovie();
+    }, [page])
     return (
         <>
             <Header />
@@ -22,28 +52,29 @@ function Home() {
             <section className="popular container" id="popular">
                 {/* Heading */}
                 <div className="heading">
-                    <h2 className="heading-title">Showing Movies</h2>
+                    <h2 className="heading-title">Phim đang chiếu</h2>
                     <div className="swiper-btn">
-                        <div className="swiper-button-prev"></div>
-                        <div className="swiper-button-next"></div>
+                        <i className="bx bx-right-arrow" onClick={()=> prevPage()}><BiLeftArrow /></i>
+                        <i className="bx bx-right-arrow" onClick={()=> nextPage()}><BiRightArrow/></i>
                     </div>
                 </div>
                 {/* Content */}
                 <div className="popular-content swiper">
                     <div className="movies-content">
                         {/* Movie Box Start */}
-                        {/* {showingMovies.map((m) => ( */}
+                        {movies.map((m) => (
                             <div className="movie-box" >
-                                <img src="" alt="" className="movie-box-img" />
+                                <img src={m.image} alt="" className="movie-box-img" />
                                 <div className="box-text">
-                                    <h2 className="movie-title">a</h2>
-                                    <span className="movie-type">b</span>
-                                    <a href="" className="promo-button play-btn">
-                                        <i className="bx bx-right-arrow"></i>
-                                    </a>
+                                    <h2 className="movie-title">{m.name}</h2>
+                                    {/* <span className="movie-type">{}</span> */}
+                                    <Link to={`/movie/${m.id}`} className="promo-button play-btn">
+                                        <i className="bx bx-right-arrow"><BiRightArrow /></i>
+                                    </Link>
                                 </div>
                             </div>
-                        {/* ))} */}
+                        ))}
+                        
                         {/* Movie Box End */}
                     </div>
                 </div>
@@ -59,15 +90,15 @@ function Home() {
                 <div className="movies-content">
                     {/* Movie Box Start */}
                     <div className="movie-box" >
-                                <img src="" alt="" className="movie-box-img" />
-                                <div className="box-text">
-                                    <h2 className="movie-title">a</h2>
-                                    <span className="movie-type">b</span>
-                                    <a href="" className="promo-button play-btn">
-                                        <i className="bx bx-right-arrow"></i>
-                                    </a>
-                                </div>
-                            </div>
+                        <img src="" alt="" className="movie-box-img" />
+                        <div className="box-text">
+                            <h2 className="movie-title">a</h2>
+                            <span className="movie-type">b</span>
+                            <a href="" className="promo-button play-btn">
+                                <i className="bx bx-right-arrow"></i>
+                            </a>
+                        </div>
+                    </div>
                     {/* Movie Box End */}
                 </div>
             </section>

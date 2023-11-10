@@ -1,6 +1,5 @@
 package com.example.movieapi.account_users.config;
 
-import com.example.kntshop.account_users.config.JwtService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContext;

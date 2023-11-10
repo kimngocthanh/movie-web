@@ -1,23 +1,28 @@
 package com.example.movieapi.movie.model;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import com.example.movieapi.type_movie.model.TypeMovie;
+
+import javax.persistence.*;
 
 @Entity
 public class Movie {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
+    private String name;
     private String date;
     private String director;
     private String performer;
+    @Lob
     private String describes;
     private String img;
     private String image;
     private Double price;
     private String trailer;
+    private String country;
+    @ManyToOne
+    @JoinColumn(name = "id_type", referencedColumnName = "id")
+    private TypeMovie typeMovie;
 
     public Movie() {
     }
@@ -32,6 +37,51 @@ public class Movie {
         this.image = image;
         this.price = price;
         this.trailer = trailer;
+    }
+
+    public Movie(Integer id, String name, String date, String director, String performer, String describes, String img, String image, Double price, String trailer, String country, TypeMovie typeMovie) {
+        this.id = id;
+        this.name = name;
+        this.date = date;
+        this.director = director;
+        this.performer = performer;
+        this.describes = describes;
+        this.img = img;
+        this.image = image;
+        this.price = price;
+        this.trailer = trailer;
+        this.country = country;
+        this.typeMovie = typeMovie;
+    }
+
+    public Movie(Integer id, String name, String date, String director, String performer, String describes, String img, String image, Double price, String trailer, String country) {
+        this.id = id;
+        this.name = name;
+        this.date = date;
+        this.director = director;
+        this.performer = performer;
+        this.describes = describes;
+        this.img = img;
+        this.image = image;
+        this.price = price;
+        this.trailer = trailer;
+        this.country = country;
+    }
+
+    public String getCountry() {
+        return country;
+    }
+
+    public void setCountry(String country) {
+        this.country = country;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     public Integer getId() {
@@ -72,6 +122,14 @@ public class Movie {
 
     public void setDescribes(String describes) {
         this.describes = describes;
+    }
+
+    public TypeMovie getTypeMovie() {
+        return typeMovie;
+    }
+
+    public void setTypeMovie(TypeMovie typeMovie) {
+        this.typeMovie = typeMovie;
     }
 
     public String getImg() {

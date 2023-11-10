@@ -2,16 +2,15 @@ import { Field, Formik, Form } from "formik";
 import { useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
-import Header from "../layout/Header";
-import Footer from "../layout/Footer";
+import { loginUsername } from "../service/Account";
 function Login() {
     const navigate = useNavigate();
 
     const createAccount = async (value) => {
         try {
-            // const jwt = await loginUsername(value);
-            // console.log(jwt);
-            // localStorage.setItem("JWT",jwt.data.token);
+            const jwt = await loginUsername(value);
+            console.log(jwt);
+            localStorage.setItem("JWT",jwt.data.token);
             navigate("/")
           
         } catch (e) {
@@ -31,12 +30,11 @@ function Login() {
 
                 onSubmit={(values) => {
                  
-                    // createAccount(values);
+                    createAccount(values);
                 }}
             >
-                <Form>
-                    <Header />
-                    <div className="vh-100 d-flex justify-content-center align-items-center">
+                <Form>                    
+                    <div className="vh-100 d-flex justify-content-center align-items-center bg-light text-primary" >
                         <div className="col-md-4 p-5 shadow-sm border rounded-3">
                             <h2 className="text-center mb-4 text-primary">Đăng Nhập</h2>
                             {/* Input userName */}
@@ -80,7 +78,7 @@ function Login() {
                     </div>
                 </Form>
             </Formik>
-            <Footer/>
+            
         </>
     )
 }

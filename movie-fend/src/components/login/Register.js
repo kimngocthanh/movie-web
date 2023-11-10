@@ -4,15 +4,16 @@ import { Link, useNavigate } from "react-router-dom";
 import * as Yup from 'yup';
 import Swal from "sweetalert2";
 import { useEffect } from "react";
+import { registerUsername } from "../service/Account";
 
 
 function Register() {
     const navigate = useNavigate();
 
     const createRegister = async (value) => {
-        // await registerUsername(value);
+         await registerUsername(value);
         Swal.fire("Đăng ký thành công!", "", "success");
-        navigate("/home/login")
+        navigate("/login")
     }
 
     const checkConfirmPassword = (confirmPassword) => {
@@ -59,7 +60,7 @@ function Register() {
                 }}
             >
                 <Form>
-                    <div className="vh-100 d-flex justify-content-center align-items-center">
+                    <div className="vh-100 d-flex justify-content-center align-items-center bg-light text-primary">
                         <div className="col-md-4 p-5 shadow-sm border rounded-3">
                             <h2 className="text-center mb-4 text-primary">Đăng Ký</h2>
                             {/* Input user name */}

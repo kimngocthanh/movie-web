@@ -8,18 +8,26 @@ import Login from './components/login/Login';
 import Register from './components/login/Register';
 import Home from './components/home/Home';
 import MovieDetail from './components/cart/MovieDetail';
+import MoviePlay from './components/cart/MoviePlay';
+import CartDetail from './components/cart/Cart';
+import Header from './components/layout/Header';
+import { PayPalScriptProvider } from '@paypal/react-paypal-js';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
-    <BrowserRouter>
-    <Routes>
-      <Route path='/login' element={<Login />}/>
-      <Route path='/register' element={<Register />}/>
-      <Route path='/' element={<Home />} />
-      <Route path='/detail' element={<MovieDetail />} />
-    </Routes>
-    </BrowserRouter>
+    <PayPalScriptProvider>
+      <BrowserRouter>
+        <Routes>
+          <Route path='/login' element={<Login />} />
+          <Route path='/register' element={<Register />} />
+          <Route path='/' element={<Home />} />
+          <Route path='/movie/:id' element={<MovieDetail />} />
+          <Route path='/video/:id' element={<MoviePlay />} />
+          <Route path='/cartdetail' element={<CartDetail />} />
+        </Routes>
+      </BrowserRouter>
+    </PayPalScriptProvider>
   </React.StrictMode>
 );
 

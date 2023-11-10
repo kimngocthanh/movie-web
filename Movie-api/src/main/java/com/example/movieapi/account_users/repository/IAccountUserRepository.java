@@ -12,14 +12,13 @@ import javax.transaction.Transactional;
 
 public interface IAccountUserRepository extends JpaRepository<AccountUser,Integer> {
 
-
     @Query(value = "select * from account_user a where a.user_name like :userName ",nativeQuery = true)
     AccountUser getAccountByUserName(@Param("userName") String userName);
 
     @Transactional
     @Modifying
-    @Query(value = "call insert_acc(:userName,:password,:role_id) ", nativeQuery = true)
-    void createAccount(@Param("userName")String userName, @Param("password")String password,@Param("role_id") Integer role_id);
+    @Query(value = "call insert_acc ( :password, :userName, :role_id) ", nativeQuery = true)
+    void createAccount(@Param("password")String password,@Param("userName")String userName,@Param("role_id") Integer role_id);
 
 
 }

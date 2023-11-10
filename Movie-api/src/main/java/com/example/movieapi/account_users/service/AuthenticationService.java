@@ -33,7 +33,7 @@ public class AuthenticationService {
             authenticationResponse.setErrMsg("Tài khoản đã tồn tại!");
             return authenticationResponse;
         }
-        accountUserRepository.createAccount(registerRequest.getUsername(), passwordEncoder.encode(registerRequest.getPassword()), 1);
+        accountUserRepository.createAccount(passwordEncoder.encode(registerRequest.getPassword()),registerRequest.getUsername(),  1);
         AccountUser accountUserNew = accountUserRepository.getAccountByUserName(registerRequest.getUsername());
         authenticationResponse.setToken(jwtService.generateToken(accountUserNew));
         authenticationResponse.setErrMsg(null);

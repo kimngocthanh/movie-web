@@ -36,3 +36,23 @@
     transform: rotate(360deg);
   }
 }
+
+.knt-button {
+  color: #090909;
+  padding: 0.7em 1.7em;
+  font-size: 10px;
+  margin-left: 0.5rem;
+  border-radius: 0.5em;
+  background: #e8e8e8;
+  border: 1px solid #e8e8e8;
+  transition: all .3s;
+  box-shadow: 3px 3px 3px #c5c5c5,
+              -3px -3px 3px #ffffff;
+              
+ }
+ 
+ .knt-button:active {
+  color: #666;
+  box-shadow: inset 4px 4px 4px #c5c5c5,
+              inset -4px -4px 4px #ffffff;
+ }
