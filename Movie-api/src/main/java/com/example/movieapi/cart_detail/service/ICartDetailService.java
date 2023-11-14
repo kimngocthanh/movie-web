@@ -1,5 +1,6 @@
 package com.example.movieapi.cart_detail.service;
 
+import com.example.movieapi.cart_detail.model.CartDetail;
 import com.example.movieapi.cart_detail.model.ICartDetailDto;
 
 import java.util.List;
@@ -9,4 +10,5 @@ public interface ICartDetailService {
 
     void createCartDetail(String user,Integer movie);
     void deleteCartDetail(Integer id,String username);
+    CartDetail getCartDetail(Integer id,String username);
 }

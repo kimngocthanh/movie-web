@@ -199,10 +199,14 @@ values(0,price,id_movie,id_order);
 end;
 // 
 Delimiter ;
+SELECT MAX(id)   FROM orders;
 
-call create_oders(1,3,13,"12/12/2023")
+call create_oders(1,3,13,"12/12/2023");
 
-
+select * from order_detail od 
+join orders o on od.id_order = o.id
+where o.id_user = 13 and od.id_movie = 1
+limit 1;
 
 
 

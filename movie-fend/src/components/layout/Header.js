@@ -3,17 +3,34 @@ import { Link, useNavigate } from "react-router-dom";
 import { infoAppUserByJwtToken } from "../service/Account";
 import { PiShoppingCartSimpleLight } from "react-icons/pi";
 import Swal from "sweetalert2";
+import axios from "axios";
+import { useDispatch, useSelector } from "react-redux";
+import { getCart } from "../reducer/CartReducer";
 
 function Header() {
     const [JwtToken, setJwtToken] = useState(localStorage.getItem("JWT"));
     const [username, setUsername] = useState(null);
+    const [carts, setCarts] = useState([]);
     const navigate = useNavigate();
+    const cart = useSelector((state) => state.cartReducer);
+    const dispatch = useDispatch();
 
     const getUsername = () => {
 
         const res = infoAppUserByJwtToken();
         if (res != null) {
             setUsername(res.sub);
+            dispatch(getCart(res.sub))
+        }
+    }
+
+    const getAllCartDetail = async () => {
+        const res = infoAppUserByJwtToken();
+        if (res != null) {
+            const result = await axios.get(`http://localhost:8080/cart-detail?username=${res.sub}`)
+            // console.log(result);
+            console.log(result.data);
+            setCarts(result.data);
         }
     }
 
@@ -31,6 +48,7 @@ function Header() {
     };
 
     useEffect(() => {
+        getAllCartDetail();
         getUsername();
     }, []);
 
@@ -60,7 +78,7 @@ function Header() {
                             <PiShoppingCartSimpleLight className="user-img" />
                             <Link className="text-light" to={`/cartdetail`}>
                                 Giỏ hàng
-                                <span className="badge bg-black text-white ms-1 rounded-pill">3</span>
+                                <span className="badge bg-black text-white ms-1 rounded-pill">{cart.data?.length}</span>
                             </Link>
                         </form>
                     </div>
@@ -77,7 +95,7 @@ function Header() {
                                 </a>
                             </div>
                             <ul className="dropdown-menu text-small" aria-labelledby="dropdownUser1" style={{ backgroundColor: "transparent" }}>
-                                <li><Link className="dropdown-item bg-light mt-1" to={`/home/customer`}>Thông tin</Link></li>
+                                <li><Link className="dropdown-item bg-light mt-1" to={`/customer`}>Thông tin</Link></li>
                                 <li><Link className="dropdown-item bg-light mt-1" to={`/home/orders`}>Lịch sử mua hàng</Link></li>
                                 <li><p className="dropdown-item bg-light mt-1" onClick={() => handleLogOut()}>Đăng xuất</p></li>
                             </ul>

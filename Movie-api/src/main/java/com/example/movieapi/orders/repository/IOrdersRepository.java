@@ -1,12 +1,16 @@
 package com.example.movieapi.orders.repository;
 
+import com.example.movieapi.orders.model.IOrdersDto;
 import com.example.movieapi.orders.model.Orders;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import javax.transaction.Transactional;
+import java.util.List;
 
 public interface IOrdersRepository extends JpaRepository<Orders, Integer> {
     @Transactional
@@ -29,4 +33,15 @@ public interface IOrdersRepository extends JpaRepository<Orders, Integer> {
     @Query(value = "select max(id) from orders " , nativeQuery = true)
     Integer getIdMaxOrders();
 
+    @Query(value = "select o.id from order_detail od " +
+            "join orders o on od.id_order = o.id " +
+            "where o.id_user = :idUser and od.id_movie = :idMovie limit 1", nativeQuery = true)
+    Integer checkOrderDetail(Integer idUser, Integer idMovie);
+
+    @Query(value = "select o.datetime, sum(price) as total " +
+            "from orders o " +
+            "join order_detail od on o.id = od.id_order\n" +
+            "where o.id_user = :id \n" +
+            "group by o.datetime ",nativeQuery = true)
+    Page<IOrdersDto> getOrders(Integer id, Pageable pageable);
 }

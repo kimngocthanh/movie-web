@@ -12,6 +12,8 @@ public class Customer {
     private String name;
     private String dob;
     private String phone;
+    private String email;
+    private String address;
     @OneToOne
     @JoinColumn(name = "id_account", referencedColumnName = "id")
     private AccountUser accountUser;
@@ -25,6 +27,32 @@ public class Customer {
         this.dob = dob;
         this.phone = phone;
         this.accountUser = accountUser;
+    }
+
+    public Customer(Integer id, String name, String dob, String phone, String email, String address, AccountUser accountUser) {
+        this.id = id;
+        this.name = name;
+        this.dob = dob;
+        this.phone = phone;
+        this.email = email;
+        this.address = address;
+        this.accountUser = accountUser;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
     }
 
     public Integer getId() {

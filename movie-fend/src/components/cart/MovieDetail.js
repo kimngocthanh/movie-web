@@ -6,12 +6,20 @@ import { Link, useNavigate, useParams } from 'react-router-dom';
 import axios from 'axios';
 import ReactPlayer from 'react-player';
 import { infoAppUserByJwtToken } from '../service/Account';
+import { BiRightArrow, BiLeftArrow } from "react-icons/bi"
 import Swal from 'sweetalert2';
+import { useDispatch, useSelector } from 'react-redux';
+import { getCart } from '../reducer/CartReducer';
 function MovieDetail() {
     const [movie, setMovie] = useState();
     const [url, setUrl] = useState([]);
-    const [carts,setCarts] = useState([]);
+    const [carts, setCarts] = useState([]);
+    const [page, setPage] = useState(0);
+    const [movies, setMovies] = useState([]);
+    const [totalPage, setTotalPage] = useState(0);
     const prams = useParams();
+    const dispatch = useDispatch();
+    const cart = useSelector((state) => state.cartReducer);
     const navigate = useNavigate();
     const getMovie = async () => {
         const res = await axios.get(`http://localhost:8080/movie/${prams.id}`)
@@ -27,6 +35,22 @@ function MovieDetail() {
             setCarts(result.data);
         }
     }
+    const getMovieLByType = async () => {
+        const res = await axios.get(`http://localhost:8080/movie-by-type?id=${prams.id}&page=${page}&size=5`)
+        setTotalPage(res.data.totalPages);
+        setMovies(res.data.content);
+    }
+    const nextPage = () => {
+        if (page + 1 < totalPage) {
+            setPage((prev) => prev + 1)
+        }
+    }
+
+    const prevPage = () => {
+        if (page > 0) {
+            setPage((prev) => prev - 1)
+        }
+    }
     const getUrlVideo = async () => {
         const res = await axios.get(`http://localhost:8080/video?id=${prams.id}`)
         setUrl(res.data);
@@ -35,10 +59,18 @@ function MovieDetail() {
     const createCartDetail = async () => {
         const res = infoAppUserByJwtToken();
         if (res != null) {
-            try{
-                await axios.post(`http://localhost:8080/create-cart-detail?username=${res.sub}&idMovie=${prams.id}`)
-                Swal.fire("Thêm giỏ hàng thành công!");
-            }catch(e){
+            try {
+                const ress = await axios.post(`http://localhost:8080/create-cart-detail?username=${res.sub}&idMovie=${prams.id}`)
+                console.log(ress);
+                if (ress.status == 201) {
+                    dispatch(getCart(res.sub));
+                    Swal.fire("Thêm giỏ hàng thành công!");
+                } else if (ress.status == 204) {
+                    Swal.fire("Sản phẩm đã có trong giỏ hàng!");
+                } else if (ress.status == 205) {
+                    Swal.fire("Sản phẩm đã được mua!");
+                }
+            } catch (e) {
                 console.log(e);
             }
         } else {
@@ -46,8 +78,12 @@ function MovieDetail() {
             navigate("/login")
         }
     }
+    useEffect(() => {
+        document.title = "KNT-movie";
+    }, []);
 
     useEffect(() => {
+        getMovieLByType();
         getUrlVideo();
         getMovie();
         getAllCartDetail();
@@ -118,8 +154,35 @@ function MovieDetail() {
                             <Link to={`/`} className="btn btn-outline-warning">Quay lại</Link>
                         </div>
                     </div>
+                    <div className="heading mt-5">
+                        <h2 className="heading-title">Phim tương tự</h2>
+                        <div className="swiper-btn">
+                            <i className="bx bx-right-arrow" onClick={() => prevPage()}><BiLeftArrow /></i>
+                            <i className="bx bx-right-arrow" onClick={() => nextPage()}><BiRightArrow /></i>
+                        </div>
+                    </div>
+                    {/* Content */}
+                    <div className="popular-content swiper" style={{ marginTop: "1rem" }}>
+                        <div className="movies-content">
+                            {/* Movie Box Start */}
+                            {movies.map((m) => (
+                                <div className="movie-box" >
+                                    <img src={m.image} alt="" className="movie-box-img" />
+                                    <div className="box-text">
+                                        <h2 className="movie-title">{m.name}</h2>
+                                        {/* <span className="movie-type">{}</span> */}
+                                        <Link to={`/movie/${m.id}`} className="promo-button play-btn">
+                                            <i className="bx bx-right-arrow"><BiRightArrow /></i>
+                                        </Link>
+                                    </div>
+                                </div>
+                            ))}
 
+                            {/* Movie Box End */}
+                        </div>
+                    </div>
                 </div>
+
 
             </div>
             <Footer />

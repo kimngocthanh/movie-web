@@ -26,4 +26,7 @@ public interface ICartDetailRepository extends JpaRepository<CartDetail, Integer
     @Modifying
     @Query(value = "delete from cart_detail where cart_detail.id_movie = :idMovie and cart_detail.id_user = :idUser ",nativeQuery = true)
     void deleteCartDetail(Integer idMovie,Integer idUser);
+
+    @Query(value = "select * from cart_detail cd where cd.id_movie = :idMovie and cd.id_user = :idUser", nativeQuery = true)
+    CartDetail getCartDetail(Integer idMovie,Integer idUser);
 }

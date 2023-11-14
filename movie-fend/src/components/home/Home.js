@@ -28,6 +28,9 @@ function Home() {
             setPage((prev) => prev - 1)
         }
     }
+    useEffect(() => {
+        document.title = "KNT-movie";
+    }, []);
 
     useEffect(() => {
         getAllMovie();

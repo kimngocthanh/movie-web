@@ -31,6 +31,10 @@ function MoviePlay() {
         }
     }
 
+    useEffect(() => {
+        document.title = "KNT-movie";
+    }, []);
+
     const getMovieLByType = async () => {
         const res = await axios.get(`http://localhost:8080/movie-by-type?id=${prams.id}&page=${page}&size=5`)
         setTotalPage(res.data.totalPages);

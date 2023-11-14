@@ -2,6 +2,7 @@ package com.example.movieapi.cart_detail.service;
 
 import com.example.movieapi.account_users.model.AccountUser;
 import com.example.movieapi.account_users.repository.IAccountUserRepository;
+import com.example.movieapi.cart_detail.model.CartDetail;
 import com.example.movieapi.cart_detail.model.ICartDetailDto;
 import com.example.movieapi.cart_detail.repository.ICartDetailRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,5 +32,11 @@ public class CartDetailService implements ICartDetailService{
     public void deleteCartDetail(Integer id,String username) {
         AccountUser accountUser = accountUserRepository.getAccountByUserName(username);
         cartDetailRepository.deleteCartDetail(id,accountUser.getId());
+    }
+
+    @Override
+    public CartDetail getCartDetail(Integer id, String username) {
+        AccountUser accountUser = accountUserRepository.getAccountByUserName(username);
+        return cartDetailRepository.getCartDetail(id,accountUser.getId());
     }
 }

@@ -6,6 +6,7 @@ import { infoAppUserByJwtToken } from "../service/Account";
 import { Link, useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
 import Paypal from "./Paypal";
+import { Field, Form, Formik } from "formik";
 const currency = (number) => {
     const roundedNumber = Math.floor(number);
     const formattedNumber = roundedNumber.toLocaleString("vi", {
@@ -18,6 +19,7 @@ function CartDetail() {
     const [carts, setCarts] = useState([]);
     const [toalPrice, setTotalPrice] = useState(0);
     const [checkout, setCheckOut] = useState(false);
+    const [customer, setCustomers] = useState();
     const navigate = useNavigate();
 
     const getAllCartDetail = async () => {
@@ -30,13 +32,31 @@ function CartDetail() {
         }
     }
 
-    const addToOrder = async () => {
-        setCheckOut(true);
-        // await addToOrders();
-        navigate("/cartdetail")
+    const getCustomer = async () => {
+        const result = infoAppUserByJwtToken();
+        if (result != null) {
+            const res = await axios.get(`http://localhost:8080/customer?username=${result.sub}`);
+            console.log(res);
+            setCustomers(res.data);
+        }
     }
 
-    const deleteCartDetail = (e,name) => {
+    const addToOrder = async () => {
+        if (customer.name != null && customer.phone != null && customer.address != null && customer.email != null && customer.dob != null) {
+            setCheckOut(true);
+            // await addToOrders();
+            navigate("/cartdetail")
+        }
+        else{
+            Swal.fire("Cập nhật đủ thông tin cá nhân!")
+        }
+
+    }
+    useEffect(() => {
+        document.title = "KNT-movie";
+    }, []);
+
+    const deleteCartDetail = (e, name) => {
         try {
             Swal
                 .fire({
@@ -57,8 +77,18 @@ function CartDetail() {
                         getAllCartDetail();
                     }
                 })
-        }catch(e){
+        } catch (e) {
             console.log(e);
+        }
+    }
+
+    const createCustomer = async (value) => {
+        console.log(value);
+        const result = infoAppUserByJwtToken();
+        if (result != null) {
+            await axios.post(`http://localhost:8080/create-customer?username=${result.sub}`, value);
+            Swal.fire("Cập nhật thông tin cá nhân thành công!");
+            
         }
     }
 
@@ -73,8 +103,13 @@ function CartDetail() {
 
     useEffect(() => {
         getTotalPrice();
+        getCustomer();
         getAllCartDetail();
     }, [carts.length])
+
+    if (customer == undefined) {
+        return null;
+    }
     return (
         <>
             <Header />
@@ -110,13 +145,12 @@ function CartDetail() {
                                                                 <div style={{ width: 200 }}>
                                                                     <h5 className="text-dark mb-0">{currency(e.price)}</h5>
                                                                 </div>
-                                                                <button className="btn btn-ranger" onClick={() => deleteCartDetail(e,e.name)} ><i className="fas fa-trash-alt" />x</button>
+                                                                <button className="btn btn-ranger" onClick={() => deleteCartDetail(e, e.name)} ><i className="fas fa-trash-alt" />x</button>
                                                             </div>
                                                         </div>
                                                     </div>
                                                 </div>
                                             ))}
-
                                         </div>
                                         <div className="col-lg-5">
                                             <div className="text-white rounded-3" style={{ backgroundColor: "#2d2e37" }}>
@@ -124,31 +158,54 @@ function CartDetail() {
                                                     <div className="d-flex justify-content-between align-items-center mb-4">
                                                         <h5 className="mb-0 text-light">Thông tin cá nhân</h5>
                                                     </div>
-                                                    <form className="mt-4">
-                                                        <div className="form-outline form-white mb-4">
-                                                            <input type="text" id="typeName" className="form-control form-control-lg" siez={17} placeholder="Nhập tên" />
-                                                            <label className="form-label" htmlFor="typeName">Họ và tên </label>
-                                                        </div>
-                                                        <div className="form-outline form-white mb-4">
-                                                            <input type="text" id="typeText" className="form-control form-control-lg" siez={17} placeholder="1234 5678 9012 3457" minLength={19} maxLength={19} />
-                                                            <label className="form-label" htmlFor="typeText">Số điện thoại</label>
-                                                        </div>
-                                                        <div className="row mb-4">
-                                                            <div className="col-md-7">
-                                                                <div className="form-outline form-white">
-                                                                    <input type="date" id="typeExp" className="form-control form-control-lg" size={7} minLength={7} maxLength={7} />
-                                                                    <label className="form-label" htmlFor="typeExp">Ngày sinh</label>
-
-                                                                </div>
+                                                    <Formik
+                                                        initialValues={{
+                                                            id: customer?.id,
+                                                            name: customer?.name,
+                                                            email: customer?.email,
+                                                            phone: customer?.phone,
+                                                            dob: customer?.dob,
+                                                            address: customer?.address
+                                                        }}
+                                                        onSubmit={(value) => {
+                                                            createCustomer(value);
+                                                        }}
+                                                    >
+                                                        <Form className="mt-4">
+                                                            <div className="form-outline form-white mb-4">
+                                                                <Field type="text" id="typeName" name="name" className="form-control form-control-lg" />
+                                                                <label className="form-label" htmlFor="typeName">Họ và tên </label>
                                                             </div>
-                                                            <div className="col-md-5">
-                                                                <div className="form-outline form-white">
-                                                                    <button type="button" className="btn btn-info btn-block btn-lg" >Cập nhật</button>
-                                                                </div>
+                                                            <div className="form-outline form-white mb-4">
+                                                                <Field type="text" name="phone" id="typeText" className="form-control form-control-lg" />
+                                                                <label className="form-label" htmlFor="typeText">Số điện thoại</label>
                                                             </div>
+                                                            <div className="form-outline form-white mb-4">
+                                                                <Field name="address" type="text" id="typeText" className="form-control form-control-lg" />
+                                                                <label className="form-label" htmlFor="typeText">Địa chỉ</label>
+                                                            </div>
+                                                            <div className="form-outline form-white mb-4">
+                                                                <Field name="email" type="text" id="typeText" className="form-control form-control-lg" />
+                                                                <label className="form-label" htmlFor="typeText">Email</label>
+                                                            </div>
+                                                            <div className="row mb-4">
+                                                                <div className="col-md-7">
+                                                                    <div className="form-outline form-white">
+                                                                        <Field name="dob" type="date" id="typeExp" className="form-control form-control-lg" />
+                                                                        <label className="form-label" htmlFor="typeExp">Ngày sinh</label>
 
-                                                        </div>
-                                                    </form>
+                                                                    </div>
+                                                                </div>
+                                                                <div className="col-md-5">
+                                                                    <div className="form-outline form-white">
+                                                                        <button type="submit" className="btn btn-info btn-block btn-lg" >Cập nhật</button>
+                                                                    </div>
+                                                                </div>
+
+                                                            </div>
+                                                        </Form>
+                                                    </Formik>
+
                                                     <hr className="my-4" />
                                                     <div className="d-flex justify-content-between">
                                                         <p className="mb-2">Số phim mua</p>
@@ -160,16 +217,16 @@ function CartDetail() {
                                                     </div>
                                                     {checkout ? (
                                                         <Paypal propData1={toalPrice} propData2={carts} />
-                                                    ):(
+                                                    ) : (
                                                         <button type="button" className="btn btn-info btn-block btn-lg" onClick={() => addToOrder()}>
-                                                        <div className="d-flex justify-content-between">
-                                                            <span>Thanh toán <i className="fas fa-long-arrow-alt-right ms-2" /></span>
-                                                        </div>
-                                                    </button>
+                                                            <div className="d-flex justify-content-between">
+                                                                <span>Thanh toán <i className="fas fa-long-arrow-alt-right ms-2" /></span>
+                                                            </div>
+                                                        </button>
                                                     )
-                                                    
+
                                                     }
-                                                    
+
                                                 </div>
                                             </div>
                                         </div>

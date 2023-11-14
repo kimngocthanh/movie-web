@@ -16,7 +16,6 @@ export default function Paypal(props) {
         createOrder={(data, actions, err) => {
           const price = parseFloat(props.propData1);
           const priceUsd = parseInt(price / 23000);
-          console.log(priceUsd);
           return actions.order.create({
 
             intent: "CAPTURE",
@@ -50,10 +49,10 @@ export default function Paypal(props) {
           window.location.reload()
         }
         }
-        // onError={(err) => {
-        //   console.log(err);
-        //   swal.fire("Thanh toán không thành công!", "", "error");
-        // }}
+        onError={(err) => {
+          console.log(err);
+          swal.fire("Thanh toán không thành công!", "", "error");
+        }}
       />
     </div>
   );
