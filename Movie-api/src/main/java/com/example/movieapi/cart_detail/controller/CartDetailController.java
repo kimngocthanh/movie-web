@@ -31,7 +31,8 @@ public class CartDetailController {
         CartDetail cartDetail = cartDetailService.getCartDetail(idMovie,username);
         if(cartDetail != null){
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-        }if(ordersService.checkIdOrdersDetail(username,idMovie) != null){
+        }
+        if(ordersService.checkIdOrdersDetail(username,idMovie) != null){
             return new ResponseEntity<>(HttpStatus.RESET_CONTENT);
         }
         cartDetailService.createCartDetail(username,idMovie);

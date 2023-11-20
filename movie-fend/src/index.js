@@ -1,7 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import './index.css';
-import App from './App';
 import reportWebVitals from './reportWebVitals';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import Login from './components/login/Login';
@@ -11,12 +10,14 @@ import MovieDetail from './components/cart/MovieDetail';
 import MoviePlay from './components/cart/MoviePlay';
 import CartDetail from './components/cart/Cart';
 import cartReducer from './components/reducer/reducer';
-import Header from './components/layout/Header';
 import { PayPalScriptProvider } from '@paypal/react-paypal-js';
 import { Provider } from 'react-redux';
 import thunk from 'redux-thunk';
 import { applyMiddleware, combineReducers, createStore } from 'redux';
 import Customer from './components/customer/Customer';
+import HomeSearch from './components/home/HomeSearch';
+import HomeSearchMovie from './components/home/HomeSearchMovie';
+import HomeMoviePlay from './components/home/HomeMoviePlay';
 const middleware = [thunk];
 const rootReduce = combineReducers({
   cartReducer
@@ -37,6 +38,9 @@ root.render(
             <Route path='/video/:id' element={<MoviePlay />} />
             <Route path='/cartdetail' element={<CartDetail />} />
             <Route path='/customer' element={<Customer /> }/>
+            <Route path='/home/search/:keywork' element={<HomeSearch />} />
+            <Route path='/home-search-movie' element={<HomeSearchMovie />} />
+            <Route path='/movie-play' element={<HomeMoviePlay />} />
           </Routes>
         </BrowserRouter>
       </PayPalScriptProvider>

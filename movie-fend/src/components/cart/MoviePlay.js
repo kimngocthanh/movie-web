@@ -71,7 +71,7 @@ function MoviePlay() {
                                 <span style={{ color: 'var(--main-color)' }}>Chọn tập phim : </span>
                                 {url.map((e, index) => (
                                     <>
-                                        <button className="knt-button" onClick={() => choseVideo(index)} > tập {index + 1} </button>
+                                        <button className="knt-button" style={{marginLeft :"8px"}} onClick={() => choseVideo(index)} > tập {index + 1} </button>
                                     </>
                                 ))}
                             </div>

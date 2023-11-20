@@ -7,6 +7,8 @@ import { Link, useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
 import Paypal from "./Paypal";
 import { Field, Form, Formik } from "formik";
+import { useDispatch, useSelector } from "react-redux";
+import { getCart } from "../reducer/CartReducer";
 const currency = (number) => {
     const roundedNumber = Math.floor(number);
     const formattedNumber = roundedNumber.toLocaleString("vi", {
@@ -21,7 +23,8 @@ function CartDetail() {
     const [checkout, setCheckOut] = useState(false);
     const [customer, setCustomers] = useState();
     const navigate = useNavigate();
-
+    const dispatch = useDispatch();
+    const cart = useSelector((state) => state.cartReducer);
     const getAllCartDetail = async () => {
         const res = infoAppUserByJwtToken();
         if (res != null) {
@@ -33,7 +36,7 @@ function CartDetail() {
     }
 
     const getCustomer = async () => {
-        const result = infoAppUserByJwtToken();
+        const result = infoAppUserByJwtToken();      
         if (result != null) {
             const res = await axios.get(`http://localhost:8080/customer?username=${result.sub}`);
             console.log(res);
@@ -73,6 +76,7 @@ function CartDetail() {
                     if (willDelete.isConfirmed) {
                         const result = infoAppUserByJwtToken();
                         await axios.delete(`http://localhost:8080/delete-cart-detail?username=${result.sub}&id=${e.id}`);
+                        dispatch(getCart(result.sub));
                         Swal.fire("Xoá sản phẩm thành công!", "", "success");
                         getAllCartDetail();
                     }

@@ -20,7 +20,6 @@ export const addToOrders = async (cartDetails,username) => {
 
 export const infoAppUserByJwtToken = () => {
     const jwtToken = localStorage.getItem("JWT");
-    
     if (jwtToken != null) {
         const decodedToken = jwtDecode(jwtToken);
         return decodedToken;

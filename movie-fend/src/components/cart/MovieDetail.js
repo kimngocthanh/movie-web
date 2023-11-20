@@ -17,10 +17,13 @@ function MovieDetail() {
     const [page, setPage] = useState(0);
     const [movies, setMovies] = useState([]);
     const [totalPage, setTotalPage] = useState(0);
+    const [comments, setComments] = useState([]);
+
     const prams = useParams();
     const dispatch = useDispatch();
     const cart = useSelector((state) => state.cartReducer);
     const navigate = useNavigate();
+
     const getMovie = async () => {
         const res = await axios.get(`http://localhost:8080/movie/${prams.id}`)
         console.log(res);
@@ -34,6 +37,12 @@ function MovieDetail() {
             console.log(result.data);
             setCarts(result.data);
         }
+    }
+
+    const getComment = async () => {
+        const res = await axios.get(`http://localhost:8080/comment?idMovie=${prams.id}`);
+        console.log(res);
+        setComments(res.data);
     }
     const getMovieLByType = async () => {
         const res = await axios.get(`http://localhost:8080/movie-by-type?id=${prams.id}&page=${page}&size=5`)
@@ -54,6 +63,29 @@ function MovieDetail() {
     const getUrlVideo = async () => {
         const res = await axios.get(`http://localhost:8080/video?id=${prams.id}`)
         setUrl(res.data);
+    }
+
+    const playVideo = async () => {
+        const ress = infoAppUserByJwtToken();
+        if (ress != null) {
+            const res = await axios.get(`http://localhost:8080/check-movie?username=${ress.sub}&idMovie=${prams.id}`);
+            if (res.status == 201) {
+                navigate(`/video/${prams.id}`);
+            }
+            if (res.status == 204) {
+                Swal.fire("Mua phim trước khi xem! ")
+            }
+        }
+
+    }
+
+    const createComment = async () => {
+        let comment = document.getElementById("comment-text").value;
+        const ress = infoAppUserByJwtToken();
+        if(ress != null) {
+            await axios.post(`http://localhost:8080/create-comment?username=${ress.sub}&idMovie=${prams.id}&comment=${comment}`)
+            getComment();
+        }
     }
 
     const createCartDetail = async () => {
@@ -87,6 +119,7 @@ function MovieDetail() {
         getUrlVideo();
         getMovie();
         getAllCartDetail();
+        getComment();
     }, [prams.id]);
 
     if (movie === undefined) {
@@ -113,6 +146,7 @@ function MovieDetail() {
                     <div  >
                         <div className="d-flex justify-content-between align-items-center">
                             <h2>Phim: {movie.name}</h2>
+                            <button className="btn btn-outline-warning"  onClick={() => playVideo()}>Xem phim</button>
                             <button className="btn btn-outline-warning" onClick={() => createCartDetail()} id="add-cart">Thêm giỏ hàng</button>
                         </div>
 
@@ -185,6 +219,51 @@ function MovieDetail() {
 
 
             </div>
+
+
+
+            <div className="container mt-5">
+                <h1>Bình luận và Đánh giá</h1>
+                <div className="row">
+                    <div className="col-md-8">
+                        <div className="comment-section">
+                            {/* Hiển thị các bình luận */}
+                            {comments.map((comment) => (
+                                <div className="comment" >
+                                    <div className="user-info">
+                                        <span className="username">{comment.userName}</span>
+                                    </div>
+                                    <div className="comment-content">
+                                        <p>{comment.commentText}</p>
+                                        <div className="comment-meta">
+                                            <span className="comment-date">{comment.date}</span>
+                                            {/* <span className="comment-like">Like</span> */}
+                                        </div>
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+                        {/* Form nhập bình luận */}
+                        <div className="new-comment mt-4">
+                            <textarea className="form-control" rows="3" placeholder="Viết bình luận của bạn..." defaultValue={""} id="comment-text" />
+                            <button className="btn btn-outline-warning mt-2" onClick={() => createComment()}>Gửi</button>
+                        </div>
+                    </div>
+                    <div className="col-md-4">
+                        {/* Phần đánh giá */}
+                        <div className="rating-section mt-3">
+                            {/* Hiển thị điểm đánh giá */}
+                            <div className="user-rating">
+                                {/* Điểm đánh giá */}
+                            </div>
+                            {/* Điều chỉnh để người dùng có thể đánh giá */}
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+
             <Footer />
         </>
     )

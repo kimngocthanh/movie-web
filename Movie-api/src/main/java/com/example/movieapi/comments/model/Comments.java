@@ -1,6 +1,7 @@
 package com.example.movieapi.comments.model;
 
 import com.example.movieapi.account_users.model.AccountUser;
+import com.example.movieapi.movie.model.Movie;
 import com.example.movieapi.video.model.Video;
 
 import javax.persistence.*;
@@ -16,18 +17,18 @@ public class Comments {
     @JoinColumn(name = "id_user", referencedColumnName = "id")
     private AccountUser accountUser;
     @ManyToOne
-    @JoinColumn(name = "id_video",referencedColumnName = "id")
-    private Video video;
+    @JoinColumn(name = "id_movie",referencedColumnName = "id")
+    private Movie movie;
 
     public Comments() {
     }
 
-    public Comments(Integer id, String commentText, String date, AccountUser accountUser, Video video) {
+    public Comments(Integer id, String commentText, String date, AccountUser accountUser, Movie movie) {
         this.id = id;
         this.commentText = commentText;
         this.date = date;
         this.accountUser = accountUser;
-        this.video = video;
+        this.movie = movie;
     }
 
     public Integer getId() {
@@ -62,11 +63,11 @@ public class Comments {
         this.accountUser = accountUser;
     }
 
-    public Video getVideo() {
-        return video;
+    public Movie getMovie() {
+        return movie;
     }
 
-    public void setVideo(Video video) {
-        this.video = video;
+    public void setMovie(Movie movie) {
+        this.movie = movie;
     }
 }

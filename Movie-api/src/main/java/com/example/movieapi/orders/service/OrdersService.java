@@ -4,6 +4,7 @@ import com.example.movieapi.account_users.model.AccountUser;
 import com.example.movieapi.account_users.repository.IAccountUserRepository;
 import com.example.movieapi.cart_detail.model.CartDetailDto;
 import com.example.movieapi.cart_detail.repository.ICartDetailRepository;
+import com.example.movieapi.movie.model.IMovieDto;
 import com.example.movieapi.orders.model.IOrdersDto;
 import com.example.movieapi.orders.model.OrderDetailDto;
 import com.example.movieapi.orders.repository.IOrdersRepository;
@@ -49,6 +50,23 @@ public class OrdersService implements IOrdersService{
         AccountUser accountUser = accountUserRepository.getAccountByUserName(username);
         Page<IOrdersDto> ordersDto = ordersRepository.getOrders(accountUser.getId(),pageable);
         return ordersDto;
+    }
+
+    @Override
+    public Integer checkMovieInOrder(String username, Integer idMovie) {
+        AccountUser accountUser = accountUserRepository.getAccountByUserName(username);
+        return ordersRepository.checkMovieInOrder(accountUser.getId(),idMovie);
+    }
+
+    @Override
+    public Page<IMovieDto> getMoviePlay(String username,Pageable pageable) {
+        AccountUser accountUser = accountUserRepository.getAccountByUserName(username);
+        return ordersRepository.getMovieList(accountUser.getId(),pageable);
+    }
+
+    @Override
+    public List<IMovieDto> getMovieMax() {
+        return ordersRepository.getMovieMax();
     }
 
 

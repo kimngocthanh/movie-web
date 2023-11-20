@@ -208,5 +208,40 @@ join orders o on od.id_order = o.id
 where o.id_user = 13 and od.id_movie = 1
 limit 1;
 
+select c.id, c.dob, c.name, c.phone, c.address,c.email from customer c 
+join account_user au on c.id_account = au.id
+where au.id =1;
+
+insert into customer(dob,name,phone,address,email,id_account)
+values();
+
+select o.datetime, sum(price) as total from orders o
+join order_detail od on o.id = od.id_order
+where o.id_user = 21 
+group by o.datetime, o.id;
+
+select od.id 
+from order_detail od
+join orders o on od.id_order = o.id
+join account_user au on o.id_user = au.id
+where au.id = 21 and od.id_movie = 8 ;
+
+select * from order_detail;
+
+select m.id, m.name, m.image, count(*) as count
+from order_detail od 
+left join movie m on od.id_movie = m.id
+group by m.id,m.name,m.image
+order by count desc
+limit 5 ;
+
+select c.comment_text as commentText, c.date, au.user_name as userName 
+from comments c 
+join movie m on c.id_movie = m.id
+join account_user au on c.id_user = au.id
+where m.id =1 ;
+
+insert into comments(comment_text,date, id_user,id_movie)
+values()
 
 

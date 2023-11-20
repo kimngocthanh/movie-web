@@ -6,17 +6,18 @@ import Swal from "sweetalert2";
 import axios from "axios";
 import { useDispatch, useSelector } from "react-redux";
 import { getCart } from "../reducer/CartReducer";
+import { LiaSearchSolid } from "react-icons/lia";
 
-function Header() {
+function Header({ inputSearch, onInputChange }) {
     const [JwtToken, setJwtToken] = useState(localStorage.getItem("JWT"));
     const [username, setUsername] = useState(null);
     const [carts, setCarts] = useState([]);
     const navigate = useNavigate();
     const cart = useSelector((state) => state.cartReducer);
     const dispatch = useDispatch();
+    const [keyword, setKeyword] = useState("");
 
     const getUsername = () => {
-
         const res = infoAppUserByJwtToken();
         if (res != null) {
             setUsername(res.sub);
@@ -24,15 +25,34 @@ function Header() {
         }
     }
 
+    const handleInputChange = (event) => {
+        setKeyword(event.target.value);
+        // console.log(keyword);
+    };
+
     const getAllCartDetail = async () => {
         const res = infoAppUserByJwtToken();
         if (res != null) {
             const result = await axios.get(`http://localhost:8080/cart-detail?username=${res.sub}`)
             // console.log(result);
-            console.log(result.data);
             setCarts(result.data);
         }
     }
+
+    const searchMedicines = (keyword) => {
+        console.log(keyword);
+        // if(keyword=null){
+        //     navigate(`/`);
+        // }
+
+        navigate(`/home/search/${keyword}`);
+    };
+
+    const handleSearch = (event) => {
+        event.preventDefault();
+        searchMedicines(keyword);
+    };
+
 
     const handleLogOut = () => {
         localStorage.removeItem("JWT");
@@ -46,6 +66,10 @@ function Header() {
         navigate("/");
         window.location.reload();
     };
+
+    const handleButtonClick = () => {
+
+    }
 
     useEffect(() => {
         getAllCartDetail();
@@ -62,6 +86,8 @@ function Header() {
                     <a href="/" className="logo">
                         <Link className="text-light" to='/'>KNT-movie</Link>
                     </a>
+                    <Link className="text-light" to={`/home-search-movie`} >Danh sách phim</Link>
+
                     {/* Search Box */}
                     <div className="search-box">
                         <input
@@ -69,13 +95,23 @@ function Header() {
                             name="name"
                             id="search-input"
                             placeholder="Nhập phim"
+                            value={inputSearch}
+                            onChange={(event) => {
+                                handleInputChange(event)
+                            }}
+                            aria-label="Search"
                         />
-                        <i className="bx bx-search"></i>
+                        {/* <input type="search" id="form-input-home" className="form-control" value={inputSearch}
+                                placeholder="Tìm kiếm sản phẩm..." onChange={(event) => {
+                                    handleInputChange(event);
+                                    // onInputChange(event);
+                                }} aria-label="Search" /> */}
+                            < LiaSearchSolid style={{color: "white"}} onClick={(e) => handleSearch(e)}/>
                     </div>
                     {/* User */}
-                    <div style={{ marginRight: "1rem" }}>
-                        <form className="user">
-                            <PiShoppingCartSimpleLight className="user-img" />
+                    <div >
+                        <form className="user p-1">
+                            <PiShoppingCartSimpleLight className="user-img" size={100}/>
                             <Link className="text-light" to={`/cartdetail`}>
                                 Giỏ hàng
                                 <span className="badge bg-black text-white ms-1 rounded-pill">{cart.data?.length}</span>
@@ -91,19 +127,19 @@ function Header() {
                                         alt="user-img"
                                         className="user-img"
                                     />
-                                    {username != null && <div className="p-1">{username}</div>}
+                                    {username != null && <div className="p-2">{username}</div>}
                                 </a>
                             </div>
                             <ul className="dropdown-menu text-small" aria-labelledby="dropdownUser1" style={{ backgroundColor: "transparent" }}>
                                 <li><Link className="dropdown-item bg-light mt-1" to={`/customer`}>Thông tin</Link></li>
-                                <li><Link className="dropdown-item bg-light mt-1" to={`/home/orders`}>Lịch sử mua hàng</Link></li>
+                                <li><Link className="dropdown-item bg-light mt-1" to={`/movie-play`}>Phim đã mua</Link></li>
                                 <li><p className="dropdown-item bg-light mt-1" onClick={() => handleLogOut()}>Đăng xuất</p></li>
                             </ul>
                         </div>
                     ) : (
                         <div className="dropdown text-end">
                             <div className="users-icon">
-                                <form  className="text-light d-flex justify-content-center align-items-center" id="dropdownUser1" aria-expanded="false">
+                                <form className="text-light d-flex justify-content-center align-items-center" id="dropdownUser1" aria-expanded="false">
                                     <img
                                         src="https://cdn.landesa.org/wp-content/uploads/default-user-image.png"
                                         alt="user-img"
