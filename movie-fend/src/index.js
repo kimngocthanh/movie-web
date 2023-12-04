@@ -18,6 +18,7 @@ import Customer from './components/customer/Customer';
 import HomeSearch from './components/home/HomeSearch';
 import HomeSearchMovie from './components/home/HomeSearchMovie';
 import HomeMoviePlay from './components/home/HomeMoviePlay';
+import Page404 from './components/cart/Page404';
 const middleware = [thunk];
 const rootReduce = combineReducers({
   cartReducer
@@ -41,6 +42,7 @@ root.render(
             <Route path='/home/search/:keywork' element={<HomeSearch />} />
             <Route path='/home-search-movie' element={<HomeSearchMovie />} />
             <Route path='/movie-play' element={<HomeMoviePlay />} />
+            <Route path='/page-404' element={<Page404 />} />
           </Routes>
         </BrowserRouter>
       </PayPalScriptProvider>

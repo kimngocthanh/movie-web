@@ -36,7 +36,7 @@ function CartDetail() {
     }
 
     const getCustomer = async () => {
-        const result = infoAppUserByJwtToken();      
+        const result = infoAppUserByJwtToken();
         if (result != null) {
             const res = await axios.get(`http://localhost:8080/customer?username=${result.sub}`);
             console.log(res);
@@ -50,7 +50,7 @@ function CartDetail() {
             // await addToOrders();
             navigate("/cartdetail")
         }
-        else{
+        else {
             Swal.fire("Cập nhật đủ thông tin cá nhân!")
         }
 
@@ -92,7 +92,7 @@ function CartDetail() {
         if (result != null) {
             await axios.post(`http://localhost:8080/create-customer?username=${result.sub}`, value);
             Swal.fire("Cập nhật thông tin cá nhân thành công!");
-            
+            getCustomer();
         }
     }
 
@@ -111,7 +111,7 @@ function CartDetail() {
         getAllCartDetail();
     }, [carts.length])
 
-    if (customer == undefined) {
+    if (customer === undefined) {
         return null;
     }
     return (
@@ -172,6 +172,7 @@ function CartDetail() {
                                                             address: customer?.address
                                                         }}
                                                         onSubmit={(value) => {
+                                                            console.log(value);
                                                             createCustomer(value);
                                                         }}
                                                     >
@@ -228,7 +229,6 @@ function CartDetail() {
                                                             </div>
                                                         </button>
                                                     )
-
                                                     }
 
                                                 </div>

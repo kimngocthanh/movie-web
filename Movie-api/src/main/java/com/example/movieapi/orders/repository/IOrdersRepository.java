@@ -44,7 +44,7 @@ public interface IOrdersRepository extends JpaRepository<Orders, Integer> {
             "from orders o " +
             "join order_detail od on o.id = od.id_order\n" +
             "where o.id_user = :id \n" +
-            "group by o.datetime, o.id ",nativeQuery = true)
+            "group by o.datetime, o.id order by o.id desc ",nativeQuery = true)
     Page<IOrdersDto> getOrders(Integer id, Pageable pageable);
 
     @Query(value = "select od.id \n" +
